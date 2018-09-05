@@ -15,18 +15,18 @@ func Unmarshal(packedData []byte) ([]KeyValStore, uint32) {
 	keySize = format >> 4
 	valSize = format & 15
 
-	mapLen = BytesToUint32(packedData[currentPosition:currentPosition+mapLenSize])
+	mapLen = bytesToUint32(packedData[currentPosition: currentPosition+mapLenSize])
 	currentPosition += mapLenSize
 
-	maxVal = BytesToUint32(packedData[currentPosition:currentPosition+valSize])
+	maxVal = bytesToUint32(packedData[currentPosition: currentPosition+valSize])
 	currentPosition += valSize
 
 	resultMap := make([]KeyValStore, mapLen)
 
 	for i = 0; i < mapLen; i++ {
-		key := BytesToUint32(packedData[currentPosition:currentPosition+keySize])
+		key := bytesToUint32(packedData[currentPosition: currentPosition+keySize])
 		currentPosition += keySize
-		val := BytesToUint32(packedData[currentPosition:currentPosition+valSize])
+		val := bytesToUint32(packedData[currentPosition: currentPosition+valSize])
 		resultMap[i] = KeyValStore{key, val}
 
 		currentPosition += valSize
@@ -35,7 +35,7 @@ func Unmarshal(packedData []byte) ([]KeyValStore, uint32) {
 	return resultMap, maxVal
 }
 
-func BytesToUint32(bytes []byte) (result uint32) {
+func bytesToUint32(bytes []byte) (result uint32) {
 	for i, byte := range bytes {
 		if i == 0 {
 			result = uint32(byte)
@@ -43,6 +43,5 @@ func BytesToUint32(bytes []byte) (result uint32) {
 			result |= uint32(byte) << (8 * uint32(i))
 		}
 	}
-
 	return
 }

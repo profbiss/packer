@@ -14,18 +14,17 @@ func Marshal(data []KeyValStore) []byte {
 	resultBytes[currentPosition] = byte(format)
 	currentPosition++
 
-	PutUint(resultBytes, mapLen, currentPosition)
+	putUint(resultBytes, mapLen, currentPosition)
 	currentPosition += mapLenSize
 
-	PutUint(resultBytes, maxVal, currentPosition)
+	putUint(resultBytes, maxVal, currentPosition)
 	currentPosition += valSize
 
-
 	for _, item := range data {
-		PutUint(resultBytes, item.Key, currentPosition)
+		putUint(resultBytes, item.Key, currentPosition)
 		currentPosition += keySize
 
-		PutUint(resultBytes, item.Val, currentPosition)
+		putUint(resultBytes, item.Val, currentPosition)
 		currentPosition += valSize
 	}
 
@@ -34,12 +33,12 @@ func Marshal(data []KeyValStore) []byte {
 
 func calcSizeAndMaxVal(data []KeyValStore) (keySize, valSize, maxCnt uint32) {
 	for _, item := range data {
-		tSize := NeedBytesUint32(item.Key)
+		tSize := GetRequiredNumberOfBytesUint32(item.Key)
 		if keySize < tSize {
 			keySize = tSize
 		}
 
-		tSize = NeedBytesUint32(item.Val)
+		tSize = GetRequiredNumberOfBytesUint32(item.Val)
 		if valSize < tSize {
 			valSize = tSize
 		}
@@ -51,7 +50,7 @@ func calcSizeAndMaxVal(data []KeyValStore) (keySize, valSize, maxCnt uint32) {
 	return
 }
 
-func NeedBytesUint32(num uint32) uint32 {
+func GetRequiredNumberOfBytesUint32(num uint32) uint32 {
 	switch true {
 	case num <= 1<<8-1: // 255
 		return 1
@@ -62,15 +61,12 @@ func NeedBytesUint32(num uint32) uint32 {
 	default: // 4294967295
 		return 4
 	}
-
-	return 0
 }
 
-func PutUint(buf []byte, num, start_pos uint32) uint32 {
+func putUint(buf []byte, num, start_pos uint32) {
 	for num > 0 {
 		buf[start_pos] = byte(num)
 		num >>= 8
 		start_pos++
 	}
-	return start_pos
 }
