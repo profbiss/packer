@@ -1,4 +1,4 @@
-package uint32_slice_packer_to_byte
+package packer
 
 func Marshal(data []KeyValStore) []byte {
 	var keySize, valSize, mapLen, oneKeyValueSize, mapLenSize, formatSize, headerSize, maxVal, currentPosition, format uint32

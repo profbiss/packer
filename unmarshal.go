@@ -1,4 +1,4 @@
-package uint32_slice_packer_to_byte
+package packer
 
 type KeyValStore struct {
 	Key, Val uint32

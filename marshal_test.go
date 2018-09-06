@@ -1,4 +1,4 @@
-package uint32_slice_packer_to_byte_test
+package packer_test
 
 import (
 	"reflect"
@@ -7,29 +7,29 @@ import (
 )
 
 func BenchmarkMarshal(b *testing.B) {
-	data := make([]uint32_slice_packer_to_byte.KeyValStore, 3000)
+	data := make([]packer.KeyValStore, 3000)
 	var i uint32
 	for i = 0; i < 3000; i++ {
-		data[i] = uint32_slice_packer_to_byte.KeyValStore{255 + i, i}
+		data[i] = packer.KeyValStore{255 + i, i}
 	}
 
 	b.ResetTimer()
 
 	for n := 0; n < b.N; n++ {
-		uint32_slice_packer_to_byte.Marshal(data)
+		packer.Marshal(data)
 	}
 }
 
 var validResult = []byte{33, 3, 0, 0, 0, 2, 255, 0, 0, 0, 1, 1, 1, 1, 2}
 
 func TestMarshal(t *testing.T) {
-	data := make([]uint32_slice_packer_to_byte.KeyValStore, 3)
+	data := make([]packer.KeyValStore, 3)
 	var i uint32
 	for i = 0; i < 3; i++ {
-		data[i] = uint32_slice_packer_to_byte.KeyValStore{255 + i, i}
+		data[i] = packer.KeyValStore{255 + i, i}
 	}
 
-	result := uint32_slice_packer_to_byte.Marshal(data)
+	result := packer.Marshal(data)
 	if !reflect.DeepEqual(validResult, result) {
 		t.Error("Result incorrect")
 	}
@@ -46,7 +46,7 @@ var numsToTest = map[uint32]uint32{
 
 func TestNeedBytesUint32(t *testing.T) {
 	for num, correctResult := range numsToTest {
-		result := uint32_slice_packer_to_byte.NeedBytesUint32(num)
+		result := packer.NeedBytesUint32(num)
 		if result != correctResult {
 			t.Error("Result incorrect")
 		}
